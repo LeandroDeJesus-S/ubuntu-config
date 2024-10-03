@@ -20,6 +20,7 @@ echo "$(git --version) installed successfully"
 
 # zsh
 sudo apt install zsh-autosuggestions zsh-syntax-highlighting zsh -y
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # auto-suggestion
 git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
@@ -29,10 +30,13 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/p
 git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
 git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git $ZSH_CUSTOM/plugins/zsh-autocomplete
 
+echo -e "export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+" >> ~/.zshrc
+
 # python build dependencies
 sudo apt install build-essential libssl-dev zlib1g-dev \
 libbz2-dev libreadline-dev libsqlite3-dev curl git \
-libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev -y
 
 # pyenv
 curl https://pyenv.run | bash
@@ -44,14 +48,15 @@ echo "$(pyenv --version) installed successfully"
 
 # poetry
 curl -sSL https://install.python-poetry.org | python3 -
+
 mkdir $ZSH_CUSTOM/plugins/poetry
 poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
 
 # syncing .zshrc file plugins
-sed -i "s/$(cat ~/.zshrc | grep 'plugins=(')/plugins=(git poetry zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/" ~/.zshrc
+sed -i "s/plugins=(git)/plugins=(git poetry zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/" ~/.zshrc
 
 # oh-my-zsh theme
-sed -i "s/$(cat ~/.zshrc | grep 'ZSH_THEME=')/ZSH_THEME='random'\nZSH_THEME_RANDOM_CANDIDATES=('amuse' 'cloud' 'jonathan')"
+sed -i "s/$(cat ~/.zshrc | grep 'ZSH_THEME=')/ZSH_THEME='random'\nZSH_THEME_RANDOM_CANDIDATES=('amuse' 'cloud' 'jonathan')/"
 
 # docker engine
 curl -fsSL https://get.docker.com -o get-docker.sh
