@@ -1,68 +1,43 @@
-#!/usr/bin/bash
-set -e
-sudo apt update && sudo apt upgrade -y
-sudo apt install curl
-echo "$(curl --version) installed"
+#!/usr/bin/env bash
+try sudo apt update && try sudo apt upgrade -y
 
-# git
-sudo apt install git -y
-echo "$(git --version) installed successfully"
+local BASEORG="https://github.com/LeandroDeJesus-S/ubuntu-config/blob/main/dotfiles"
 
-# github cli
-(type -p wget >/dev/null || (sudo apt update && sudo apt-get install wget -y)) \
-	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
-	&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
-	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
-	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-	&& sudo apt update \
-	&& sudo apt install gh -y
+local DEFAULT_GO_VERSION="1.25.4"
+local DEFAULT_NVIM_CONFIG="https://github.com/LeandroDeJesus-S/nvim-config.git"
+local DEFAULT_LAZYDOCKER_CONFIG="$BASEORG/lazydocker/config.yml"
+local DEFAULT_LAZYGIT_CONFIG="$BASEORG/lazygit/config.yml"
+local DEFAULT_YAZI_CONFIG="$BASEORG/yazi"
+local DEFAULT_KITTY_CONFIG="https://github.com/LeandroDeJesus-S/kitty-conf.git"
 
+source ./functions.sh
 
-# zsh
-sudo apt install zsh-autosuggestions zsh-syntax-highlighting zsh -y
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+go_version=$(getparam -gover "$DEFAULT_GO_VERSION" "$@")
+lazydocker_config=$(getparam -lazydockerconf "$DEFAULT_LAZYDOCKER_CONFIG" "$@")
+lazygit_config=$(getparam -lazygitconf "$DEFAULT_LAZYGIT_CONFIG" "$@")
+yazi_config=$(getparam -yaziconf "$DEFAULT_YAZI_CONFIG" "$@")
+nvim_config=$(getparam -nvimconf "$DEFAULT_NVIM_CONFIG" "$@")
+kitty_config=$(getparam -kittyconf "$DEFAULT_KITTY_CONFIG" "$@")
 
-# auto-suggestion
-git clone https://github.com/zsh-users/zsh-autosuggestions.git $ZSH_CUSTOM/plugins/zsh-autosuggestions
+printout "[$0] started"
 
-# syntax highlighting
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-git clone https://github.com/zdharma-continuum/fast-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/fast-syntax-highlighting
-git clone --depth 1 -- https://github.com/marlonrichert/zsh-autocomplete.git $ZSH_CUSTOM/plugins/zsh-autocomplete
+# common utilitaries  WARN: must be the first
+./utilitaries.sh
 
-echo -e "export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-" >> ~/.zshrc
-
-# python build dependencies
-sudo apt install build-essential libssl-dev zlib1g-dev \
-libbz2-dev libreadline-dev libsqlite3-dev curl git \
-libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev -y
+# git stuffs
+./git_stuffs.sh
 
 # pyenv
-curl https://pyenv.run | bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-
-echo "$(pyenv --version) installed successfully"
-
-# poetry
-curl -sSL https://install.python-poetry.org | python3 -
-
-mkdir $ZSH_CUSTOM/plugins/poetry
-poetry completions zsh > $ZSH_CUSTOM/plugins/poetry/_poetry
-
-# syncing .zshrc file plugins
-sed -i "s/plugins=(git)/plugins=(git poetry zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)/" ~/.zshrc
-
-# oh-my-zsh theme
-sed -i "s/$(cat ~/.zshrc | grep 'ZSH_THEME=')/ZSH_THEME='random'\nZSH_THEME_RANDOM_CANDIDATES=('amuse' 'cloud' 'jonathan')/"
+safe_brew_install pyenv
+echo "pyenv installed successfully, restart your shell to apply changes"
 
 # docker engine
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
+./docker_stuffs.sh
 
-echo "$(sudo docker --version) and $(sudo docker compose version) installed successfully"
+# development stuffs
+./development_stuffs.sh
 
-# vscode
-sudo snap install code --classic
+# terminal stuffs    WARN: requires git
+./terminal_stuffs.sh
+
+printout "[$0] finished"

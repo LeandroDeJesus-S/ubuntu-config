@@ -1,0 +1,48 @@
+gui:
+  mouseEvents: true
+  screenMode: half
+  border: hidden
+  theme:
+    activeBorderColor:
+      - cyan
+      - bold
+    inactiveBorderColor:
+      - white
+    selectedLineBgColor:
+      - blue
+    optionsTextColor:
+      - cyan
+oS:
+  openCommand: nvim {{filename}}
+
+customCommands:
+  containers:
+    - name: stopAll
+      attach: false
+      command: 'docker stop $(docker ps -q)'
+      description: Stop all running containers
+
+    - name: up dev
+      command: docker-compose -f docker-compose.dev.yml up -d
+      attach: false
+      description: Start up the development environment
+
+    - name: down dev
+      attach: false
+      command: docker-compose -f docker-compose.dev.yml down
+      description: Stop the development environment
+
+    - name: down dev with volumes
+      attach: false
+      command: docker-compose -f docker-compose.dev.yml down -v
+      description: Stop the development environment and remove volumes
+      
+    - name: build and up dev
+      attach: false
+      command: docker-compose -f docker-compose.dev.yml up --build -d
+      description: Build and up the development environment
+
+    - name: recreate and up dev
+      attach: false
+      command: docker-compose -f docker-compose.dev.yml up --build --force-recreate -d
+      description: Rebuild and up the development environment
