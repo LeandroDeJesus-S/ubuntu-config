@@ -12,7 +12,6 @@ DEFAULT_LAZYGIT_CONFIG="$BASEORG/lazygit/config.yml"
 DEFAULT_YAZI_CONFIG="$BASEORG/yazi"
 DEFAULT_KITTY_CONFIG="https://github.com/LeandroDeJesus-S/kitty-conf.git"
 
-
 go_version=$(getparam -gover "$DEFAULT_GO_VERSION" "$@")
 lazydocker_config=$(getparam -lazydockerconf "$DEFAULT_LAZYDOCKER_CONFIG" "$@")
 lazygit_config=$(getparam -lazygitconf "$DEFAULT_LAZYGIT_CONFIG" "$@")
@@ -23,22 +22,22 @@ kitty_config=$(getparam -kittyconf "$DEFAULT_KITTY_CONFIG" "$@")
 printout "[$0] started"
 
 # common utilitaries  WARN: must be the first
-./utilitaries.sh
+. ./utilitaries.sh
 
 # git stuffs
-./git_stuffs.sh
+. ./git_stuffs.sh
 
 # pyenv
 safe_brew_install pyenv
 echo "pyenv installed successfully, restart your shell to apply changes"
 
 # docker engine
-./docker_stuffs.sh
+. ./docker_stuffs.sh
 
 # development stuffs
-./development_stuffs.sh
+. ./development_stuffs.sh
 
 # terminal stuffs    WARN: requires git
-./terminal_stuffs.sh
+. ./terminal_stuffs.sh
 
 printout "[$0] finished"
