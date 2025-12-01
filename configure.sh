@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
+source ./functions.sh
+
 try sudo apt update && try sudo apt upgrade -y
 
-local BASEORG="https://github.com/LeandroDeJesus-S/ubuntu-config/blob/main/dotfiles"
+BASEORG="https://github.com/LeandroDeJesus-S/ubuntu-config/blob/main/dotfiles"
 
-local DEFAULT_GO_VERSION="1.25.4"
-local DEFAULT_NVIM_CONFIG="https://github.com/LeandroDeJesus-S/nvim-config.git"
-local DEFAULT_LAZYDOCKER_CONFIG="$BASEORG/lazydocker/config.yml"
-local DEFAULT_LAZYGIT_CONFIG="$BASEORG/lazygit/config.yml"
-local DEFAULT_YAZI_CONFIG="$BASEORG/yazi"
-local DEFAULT_KITTY_CONFIG="https://github.com/LeandroDeJesus-S/kitty-conf.git"
+DEFAULT_GO_VERSION="1.25.4"
+DEFAULT_NVIM_CONFIG="https://github.com/LeandroDeJesus-S/nvim-config.git"
+DEFAULT_LAZYDOCKER_CONFIG="$BASEORG/lazydocker/config.yml"
+DEFAULT_LAZYGIT_CONFIG="$BASEORG/lazygit/config.yml"
+DEFAULT_YAZI_CONFIG="$BASEORG/yazi"
+DEFAULT_KITTY_CONFIG="https://github.com/LeandroDeJesus-S/kitty-conf.git"
 
-source ./functions.sh
 
 go_version=$(getparam -gover "$DEFAULT_GO_VERSION" "$@")
 lazydocker_config=$(getparam -lazydockerconf "$DEFAULT_LAZYDOCKER_CONFIG" "$@")
