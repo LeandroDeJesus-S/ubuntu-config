@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  unit_tests:
+    name: test script
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        rev: [nightly]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Run
+        run: |
+          chmod +x $(ls *.sh)
+          sudo sh -c ./configure.sh
+
+      - name: Verify
+        run: ./verify.sh

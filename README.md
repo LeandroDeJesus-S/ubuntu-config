@@ -64,3 +64,9 @@ sudo sh ./configure.sh -gover 1.25.4
 - poetry
 - uv
 - golang
+- node / nvm
+- pipx
+- pyright
+- ruff
+- mypy
+- gopls
