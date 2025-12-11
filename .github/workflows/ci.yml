@@ -21,4 +21,4 @@ jobs:
       - name: Run
         run: |
           chmod +x $(ls *.sh)
-          sudo sh -c ./configure.sh
+          ./configure.sh
