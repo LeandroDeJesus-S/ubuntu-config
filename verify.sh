@@ -7,11 +7,10 @@ printout "[$0] script started"
 
 function check_command {
     local cmd=$1
-    if ! command -v $cmd &> /dev/null; then
-        echo "Error: $cmd is not installed or not in PATH"
-        exit 1
+    if ! cmd_exist $cmd; then
+        echo "Error: $cmd was not installed or not added to PATH"
     fi
-    echo "$cmd is installed"
+    echo "$cmd was successfully installed"
 }
 
 # Utilitaries

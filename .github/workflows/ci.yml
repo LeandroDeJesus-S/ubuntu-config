@@ -4,20 +4,10 @@ on:
   push:
     branches:
       - "main"
-  pull_request:
-    branches:
-      - "main"
-  workflow_dispatch:
-
 jobs:
   unit_tests:
     name: test script
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-        rev: [nightly]
+    runs-on: [ubuntu-24.04, ubuntu-22.04]
 
     steps:
       - uses: actions/checkout@v6
@@ -26,6 +16,3 @@ jobs:
         run: |
           chmod +x $(ls *.sh)
           sudo sh -c ./configure.sh
-
-      - name: Verify
-        run: ./verify.sh

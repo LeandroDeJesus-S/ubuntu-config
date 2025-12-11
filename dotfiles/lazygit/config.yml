@@ -1,7 +1,27 @@
 gui:
   nerdFontsVersion: "3"
 git:
-  pagers:
-    - pager: delta --dark --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+  paging:
+    colorArg: always
+    pager: delta --dark --paging=never --syntax-theme ansi -s --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
 os:
-  editPreset: nvim
+  edit: 'nvim --clean --cmd "set clipboard=unnamedplus" {{filename}}'
+  editAtLine: 'nvim --clean --cmd "set clipboard=unnamedplus" +{{line}} {{filename}}'
+  editAtLineAndWait: 'nvim --clean --cmd "set clipboard=unnamedplus" +{{line}} {{filename}}'
+  editInTerminal: true
+  openDirInEditor: 'nvim --clean --cmd "set clipboard=unnamedplus" {{dir}}'
+theme:
+  spinner:
+    frames:
+      - ⠋
+      - ⠙
+      - ⠹
+      - ⠸
+      - ⠼
+      - ⠴
+      - ⠦
+      - ⠧
+      - ⠇
+      - ⠏
+    rate: 30
+

@@ -27,6 +27,7 @@ alias tok32="python -c \"import secrets;print(secrets.token_hex(32))\""
 alias tok64="python -c \"import secrets;print(secrets.token_hex(64))\""
 alias c='f() { echo "scale=4; $*" | bc -l; }; f'
 alias poff="shutdown -P +0"
+alias cvim='nvim --clean --cmd "set clipboard=unnamedplus" $*'
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -39,12 +40,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-if ollama &>/dev/null; then
-    export AI_MODEL="qwen3:0.6b"
-    alias ai="ollama run $AI_MODEL $*"
-fi
-
-
 export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -54,12 +49,19 @@ export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-if yazi -- version &>/dev/null; then
-    function y() {
-        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-        yazi "$@" --cwd-file="$tmp"
-        IFS= read -r -d '' cwd < "$tmp"
-        [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
-        rm -f -- "$tmp"
-    }
-fi
+function y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    yazi "$@" --cwd-file="$tmp"
+    IFS= read -r -d '' cwd < "$tmp"
+    [ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+    rm -f -- "$tmp"
+}
+
+kitty_upinstall(){
+    if ! command -v kitty; then
+        echo "installing kitty"
+    else
+	echo "updating kitty"
+    fi
+    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+}

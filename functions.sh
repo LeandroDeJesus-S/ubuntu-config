@@ -9,7 +9,6 @@ function try() {
     return $status
 }
 
-
 # A function to print a formatted message
 function printout() {
     echo "================================================================================"
@@ -62,7 +61,26 @@ safe_brew_install() {
     done
 }
 
-# if src is a directory or file copy it to dest, otherwise download it using wget
+# A function to safely install packages using apt.
+# It checks if a package is already installed before attempting installation.
+safe_apt_install() {
+    for pkg in "$@"; do
+        if ! dpkg -s "$pkg" &>/dev/null; then
+            echo "Installing $pkg"
+            try apt install -y "$pkg"
+        else
+            echo "Package '$pkg' is already installed."
+        fi
+    done
+}
+
+# Check if a command exists
+cmd_exist() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# if src is a directory or file copy it to dest, otherwise cloes if it ends with
+# .git or download it using wget if it starts with https://
 download_or_cp() {
     local src="$1"
     local dest="$2"
