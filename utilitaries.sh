@@ -4,6 +4,11 @@ set -e
 printout "[$0] script started"
 
 source ./functions.sh
+
+if ! cmd_exist git; then
+    safe_apt_install git
+fi
+
 if ! cmd_exist curl; then
     safe_apt_install curl
 fi
