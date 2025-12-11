@@ -15,6 +15,9 @@ fi
 
 if ! cmd_exist brew; then
     curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash /dev/stdin
+    echo >>/root/.bashrc
+    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>/root/.bashrc
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 safe_brew_install wget ffmpeg sevenzip fd ripgrep fzf font-symbols-only-nerd-font
