@@ -28,7 +28,7 @@ try apt update >/dev/null
 # lastest version of docker packages
 safe_apt_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-if [[ "$(systemctl is-active docker)" =~ "active" ]]; then
+if [[ "$(systemctl is-active docker)" != "active" ]]; then
     try systemctl start docker
 fi
 

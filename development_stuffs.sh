@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 printout "[$0] started"
 
 source ./functions.sh
@@ -10,7 +11,8 @@ safe_brew_install neovim
 if [[ ! -f "~/Downloads/go$go_version.linux-amd64.tar.gz" ]]; then
     wget -O "~/Downloads/go$go_version.linux-amd64.tar.gz" "https://go.dev/dl/go$go_version.linux-amd64.tar.gz"
 fi
-rm -rf /usr/local/go && tar -C /usr/local -xzf "~/Downloads/go$go_version.linux-amd64.tar.gz"
+if [[ -d "/usr/local/go" ]]; then rm -rf /usr/local/go; fi
+tar -C /usr/local -xzf "~/Downloads/go$go_version.linux-amd64.tar.gz"
 
 if cmd_exist go; then
     go install golang.org/x/tools/gopls@latest

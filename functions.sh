@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 function try() {
     "$@"
@@ -11,9 +12,11 @@ function try() {
 
 # A function to print a formatted message
 function printout() {
-    echo "================================================================================"
+    local len=${#1}
+    local line=$(printf '%.0s=' {1..$len})
+    echo "$line"
     echo "$1"
-    echo "================================================================================"
+    echo "$line"
 }
 
 # A function to run a command with a spinner for user feedback.
@@ -23,6 +26,7 @@ function printout() {
 getparam() {
     local key="$1"
     local default="$2"
+    [[ -z "$key" ]] && return 1
     shift 2
 
     while [[ $# -gt 0 ]]; do
@@ -51,6 +55,10 @@ safe_git_clone() {
 # A function to safely install packages using brew.
 # It checks if a package is already installed before attempting installation.
 safe_brew_install() {
+    if ! cmd_exist brew; then
+        echo "brew not available"
+        return 1
+    fi
     for pkg in "$@"; do
         if ! brew list "$pkg" &>/dev/null; then
             echo "Installing $pkg"
@@ -64,6 +72,10 @@ safe_brew_install() {
 # A function to safely install packages using apt.
 # It checks if a package is already installed before attempting installation.
 safe_apt_install() {
+    if ! cmd_exist apt || ! cmd_exist dpkg; then
+        echo "apt or dpkg not available"
+        return 1
+    fi
     for pkg in "$@"; do
         if ! dpkg -s "$pkg" &>/dev/null; then
             echo "Installing $pkg"
@@ -79,7 +91,7 @@ cmd_exist() {
     command -v "$1" >/dev/null 2>&1
 }
 
-# if src is a directory or file copy it to dest, otherwise cloes if it ends with
+# if src is a directory or file copy it to dest, otherwise clone if it ends with
 # .git or download it using wget if it starts with https://
 download_or_cp() {
     local src="$1"

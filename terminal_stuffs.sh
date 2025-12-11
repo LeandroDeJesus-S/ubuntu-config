@@ -15,9 +15,6 @@ safe_git_clone "$kitty_config" ~/.config/kitty
 safe_brew_install zsh
 sh -c "echo $(which zsh) >> /etc/shells"
 chsh -s $(which zsh)
-if [[ "$SHELL" != "/bin/zsh" ]]; then
-    exit
-fi
 
 if $install_optionals; then
     # oh-my-zsh

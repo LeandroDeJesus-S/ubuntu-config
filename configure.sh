@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 source ./functions.sh
 
 try apt update
@@ -24,6 +25,12 @@ nvim_config=$(getparam -nvimconf "$DEFAULT_NVIM_CONFIG" "$@")
 kitty_config=$(getparam -kittyconf "$DEFAULT_KITTY_CONFIG" "$@")
 
 install_optionals=$(getparam -installopts "n" "$@")
+if [[ "$install_optionals" == "y" ]]; then
+    install_optionals=true
+else
+    install_optionals=false
+fi
+
 printout "[$0] started"
 
 # common utilitaries  WARN: must be the first
