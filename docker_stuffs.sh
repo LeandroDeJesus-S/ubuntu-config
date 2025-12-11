@@ -18,12 +18,12 @@ if ! cmd_exist docker && cmd_exist systemctl; then
 
     # Add the repository to Apt sources:
     tee /etc/apt/sources.list.d/docker.sources <<EOF
-    Types: deb
-    URIs: https://download.docker.com/linux/ubuntu
-    Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
-    Components: stable
-    Signed-By: /etc/apt/keyrings/docker.asc
-    EOF
+Types: deb
+URIs: https://download.docker.com/linux/ubuntu
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: stable
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
 
     try apt update >/dev/null
 
@@ -42,16 +42,15 @@ if ! cmd_exist docker && cmd_exist systemctl; then
     if [[ ! -d "/etc/docker" ]]; then
         mkdir -p /etc/docker
     fi
-
     echo <<EOF
-    {
-    "log-driver": "json-file",
-    "log-opts": {
-        "max-size": "10m",
-        "max-file": "3"
-    }
-    }
-    EOF > /etc/docker/daemon.json
+{
+"log-driver": "json-file",
+"log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+}
+}
+EOF > /etc/docker/daemon.json
 fi
 
 install_optionals && safe_brew_install jesseduffield/lazydocker/lazydocker
